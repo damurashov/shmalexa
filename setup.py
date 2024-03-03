@@ -1,30 +1,35 @@
 from setuptools import setup
 import logging
 
+# TODO
+project_name="name"
 requirements = list()
+description="wat?"
+authror="What's your name"
+long_description=""
+url="example.com"
 
 with open('requirements.txt', 'r') as f:
     requirements = list(filter(lambda i: len(i) > 0, map(lambda i: i.strip(), f.readlines())))
 
 print(f"requirements: {requirements}")
 
-def get_long_description():
-    with open("README.md", 'r', encoding='utf-8') as f:
-        return f.read()
+with open("README.md", 'r', encoding='utf-8') as f:
+    long_description = f.read()
 
 
 setup(
-    name="imposter",
+    name=project_name
     packages=[
-        "imposter"
+        project_name
     ],
     include_package_data=True,
     license="MIT",
-    description="GET-POST request-response simulation",
-    long_description=get_long_description(),
+    description=description,
+    long_description=long_description,
     long_description_content_type="text/markdown",
-    url="myurl",
-    author="imposter",
+    url=url,
+    author=author,
     setup_requires=["wheel"],
     install_requires=requirements,
     classifiers=[
@@ -33,10 +38,10 @@ setup(
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.7",
-    version="0.0.1-beta",
-    entry_points="""
+    version="0.0.1",
+    entry_points=f"""
         [console_scripts]
-        imposter = imposter.app:main
+        {project_name} = {project_name}.app:main
     """
 )
 
