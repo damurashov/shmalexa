@@ -6,3 +6,4 @@ venv/
 build/
 imposter.egg-info/
 nothing
+name.egg-info/
