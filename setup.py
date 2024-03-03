@@ -5,7 +5,7 @@ import logging
 project_name="name"
 requirements = list()
 description="wat?"
-authror="What's your name"
+author="What's your name"
 long_description=""
 url="example.com"
 
@@ -19,7 +19,7 @@ with open("README.md", 'r', encoding='utf-8') as f:
 
 
 setup(
-    name=project_name
+    name=project_name,
     packages=[
         project_name
     ],
