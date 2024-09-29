@@ -25,17 +25,18 @@ SCRIPTS_DIR = os.environ.get("SCRIPTS", pathlib.Path.home() / ".local" / "shmale
 
 
 def command(text):
+    # Add scripts' dir into path
     scripts_dir = pathlib.Path(SCRIPTS_DIR).resolve()
     print("Using scripts from", str(scripts_dir))
     here_dir = pathlib.Path(__file__).resolve().parent
-    sys.path.append(scripts_dir)
+    sys.path.append(str(scripts_dir))
+
+    # Look for scripts
     scripts_dir = os.path.relpath(str(scripts_dir), here_dir)
-    print(scripts_dir)
     scripts = tired.fs.find(str(scripts_dir) + "/*.py", is_file=True)
     for script in scripts:
         script = script.resolve()
         module = importlib.import_module(script.stem)
-        print(module.__dir__())
         function = getattr(module, "shmalexa")
         try:
             if function(text):
