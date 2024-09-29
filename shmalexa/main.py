@@ -13,6 +13,8 @@ import tired.fs
 import vosk
 import sys
 import importlib
+import dataclasses
+
 
 ACTIVATE_PHRASE = "hey babe"
 DEACTIVATE_PHRASE = "never mind"
@@ -45,6 +47,17 @@ def command(text):
     return False
 
 
+@dataclasses.dataclass
+class Shmalexa:
+    model: object
+    stream: object
+
+    def capture(self) -> str or None:
+        data = self.stream.read(4096)
+        if self.model.AcceptWaveform(data):
+            return json.loads(self.model.Result())
+
+
 def main():
     # model_path = "../models/vosk-model-en-us-0.42-gigaspeech"
     # model_path = "../models/vosk-model-en-us-0.42-gigaspeech"
@@ -67,16 +80,16 @@ def main():
                     frames_per_buffer=8192)
 
     output_file_path = "recognized_text.txt"
+    shm = Shmalexa(rec, stream)
 
     expect_input = False
     with open(output_file_path, "w") as output_file:
         print("Listening for speech. Say 'Terminate' to stop.")
         # Start streaming and recognize speech
         while True:
-            data = stream.read(4096) #read in chunks of 4096 bytes
-            if rec.AcceptWaveform(data): #accept waveform of input voice
+            result = shm.capture()
+            if result:
                 # Parse the JSON result and get the recognized text
-                result = json.loads(rec.Result())
                 recognized_text = result['text']
 
                 if len(recognized_text.strip()) == 0:
@@ -113,7 +126,7 @@ def main():
                     else:
                         shmalexa.voice.play.play("affirmative")
                         expect_input = False
-                    
+
 
     # Stop and close the stream
     stream.stop_stream()
