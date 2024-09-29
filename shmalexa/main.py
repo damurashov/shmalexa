@@ -41,8 +41,6 @@ def command(text, shm):
         try:
             if function(text, shm):
                 return True
-            else:
-                return False
         except Exception:
             print("failed to execute script")
     return False
