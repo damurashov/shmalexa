@@ -16,8 +16,8 @@ import importlib
 import dataclasses
 
 
-ACTIVATE_PHRASE = "hey babe"
-DEACTIVATE_PHRASE = "never mind"
+ACTIVATE_PHRASES = ["hey babe", "hey baby", "hello dear"]
+DEACTIVATE_PHRASES = ["never mind", "nevermind", "forget about it", "forget 'bout it"]
 DEBUG = os.environ.get("DEBUG", False)
 VERBOSE = os.environ.get("VERBOSE", False)
 LOG = os.environ.get("LOG", False)
@@ -109,14 +109,14 @@ def main():
                     shmalexa.voice.play.play("terminate")
                     stream.start_stream()
                     break
-                elif ACTIVATE_PHRASE in recognized_text.lower():
+                elif any(map(lambda i: i in recognized_text.lower(), ACTIVATE_PHRASES)):
                     stream.stop_stream()
                     shmalexa.voice.play.play("activate")
                     stream.start_stream()
                     expect_input = True
                     # data = stream.read(4096) # flush stream, crutch
                 elif expect_input:
-                    if DEACTIVATE_PHRASE in recognized_text.lower():
+                    if any(map(lambda i: i in recognized_text.lower(), DEACTIVATE_PHRASES)):
                         stream.stop_stream()
                         shmalexa.voice.play.play("deactivate")
                         expect_input = False
