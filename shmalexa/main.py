@@ -1,7 +1,7 @@
 """
 Credits:
 - https://medium.com/@nimritakoul01/offline-speech-to-text-in-python-f5d6454ecd02
-- 
+- narrakeet.com for beautiful voices
 """
 
 import json
@@ -87,6 +87,7 @@ def main():
                         shmalexa.voice.play.play("mismatch")
                         stream.start_stream()
                     else:
+                        shmalexa.voice.play.play("affirmative")
                         expect_input = False
                     
 
