@@ -24,7 +24,7 @@ LOG = os.environ.get("LOG", False)
 SCRIPTS_DIR = os.environ.get("SCRIPTS", pathlib.Path.home() / ".local" / "shmalexa")
 
 
-def command(text):
+def command(text, shm):
     # Add scripts' dir into path
     scripts_dir = pathlib.Path(SCRIPTS_DIR).resolve()
     print("Using scripts from", str(scripts_dir))
@@ -39,7 +39,7 @@ def command(text):
         module = importlib.import_module(script.stem)
         function = getattr(module, "shmalexa")
         try:
-            if function(text):
+            if function(text, shm):
                 return True
             else:
                 return False
@@ -120,7 +120,7 @@ def main():
                         shmalexa.voice.play.play("deactivate")
                         expect_input = False
                         stream.start_stream()
-                    elif not command(recognized_text.lower()):
+                    elif not command(recognized_text.lower(), shm):
                         stream.stop_stream()
                         shmalexa.voice.play.play("mismatch")
                         stream.start_stream()
