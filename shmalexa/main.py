@@ -49,8 +49,8 @@ def main():
         print("Listening for speech. Say 'Terminate' to stop.")
         # Start streaming and recognize speech
         while True:
-            data = stream.read(4096)#read in chunks of 4096 bytes
-            if rec.AcceptWaveform(data):#accept waveform of input voice
+            data = stream.read(4096) #read in chunks of 4096 bytes
+            if rec.AcceptWaveform(data): #accept waveform of input voice
                 # Parse the JSON result and get the recognized text
                 result = json.loads(rec.Result())
                 recognized_text = result['text']
@@ -66,18 +66,28 @@ def main():
 
                 # Check for keyword
                 if "terminate" in recognized_text.lower():
+                    stream.stop_stream()
                     shmalexa.voice.play.play("terminate")
+                    stream.start_stream()
                     break
                 elif ACTIVATE_PHRASE in recognized_text.lower():
+                    stream.stop_stream()
                     shmalexa.voice.play.play("activate")
+                    stream.start_stream()
                     expect_input = True
+                    # data = stream.read(4096) # flush stream, crutch
                 elif expect_input:
                     if DEACTIVATE_PHRASE in recognized_text.lower():
+                        stream.stop_stream()
                         shmalexa.voice.play.play("deactivate")
+                        expect_input = False
+                        stream.start_stream()
                     elif not command(recognized_text.lower()):
+                        stream.stop_stream()
                         shmalexa.voice.play.play("mismatch")
-                else:
-                    shmalexa.voice.play.play("mismatch")
+                        stream.start_stream()
+                    else:
+                        expect_input = False
                     
 
     # Stop and close the stream
