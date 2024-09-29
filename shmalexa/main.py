@@ -34,15 +34,18 @@ def command(text, shm):
     # Look for scripts
     scripts_dir = os.path.relpath(str(scripts_dir), here_dir)
     scripts = tired.fs.find(str(scripts_dir) + "/*.py", is_file=True)
-    for script in scripts:
-        script = script.resolve()
-        module = importlib.import_module(script.stem)
-        function = getattr(module, "shmalexa")
+    scripts = map(lambda i: str(i.stem), scripts)
+    scripts = set(scripts)
+    for modulename in scripts:
         try:
+            #script = script.resolve()
+            module = importlib.import_module(modulename)
+            importlib.reload(module)
+            function = getattr(module, "shmalexa")
             if function(text, shm):
                 return True
         except Exception:
-            print("failed to execute script")
+            print("failed to execute script", modulename)
     return False
 
 
