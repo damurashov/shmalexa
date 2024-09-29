@@ -7,7 +7,7 @@ __VOICES = {
     "deactivate": str(__HERE / "deactivate-2.mp3"),
     "terminate": str(__HERE / "terminate-3.mp3"),
     "mismatch": str(__HERE / "mismatch-4.mp3"),
-    "affirmative": str(__HERE / "affirmative-1-jennifer.mp3"
+    "affirmative": str(__HERE / "affirmative-1-jennifer.mp3")
 }
 
 def play(key):

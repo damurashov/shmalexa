@@ -9,17 +9,41 @@ import os
 import pathlib
 import pyaudio
 import shmalexa.voice.play
+import tired.fs
 import vosk
+import sys
+import importlib
 
 ACTIVATE_PHRASE = "hey babe"
 DEACTIVATE_PHRASE = "never mind"
 DEBUG = os.environ.get("DEBUG", False)
 VERBOSE = os.environ.get("VERBOSE", False)
 LOG = os.environ.get("LOG", False)
+SCRIPTS_DIR = os.environ.get("SCRIPTS", pathlib.Path.home() / ".local" / "shmalexa")
+
 
 def command(text):
-    print(text)
+    scripts_dir = pathlib.Path(SCRIPTS_DIR).resolve()
+    print("Using scripts from", str(scripts_dir))
+    here_dir = pathlib.Path(__file__).resolve().parent
+    sys.path.append(scripts_dir)
+    scripts_dir = os.path.relpath(str(scripts_dir), here_dir)
+    print(scripts_dir)
+    scripts = tired.fs.find(str(scripts_dir) + "/*.py", is_file=True)
+    for script in scripts:
+        script = script.resolve()
+        module = importlib.import_module(script.stem)
+        print(module.__dir__())
+        function = getattr(module, "shmalexa")
+        try:
+            if function(text):
+                return True
+            else:
+                return False
+        except Exception:
+            print("failed to execute script")
     return False
+
 
 def main():
     # model_path = "../models/vosk-model-en-us-0.42-gigaspeech"
